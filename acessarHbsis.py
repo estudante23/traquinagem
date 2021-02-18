@@ -52,7 +52,7 @@ class HBSIS():
         pneusDoSistema.sort(), pneusDaInspecao.sort()
         return (True, pneusDoSistema, divElementPneus) if pneusDaInspecao == pneusDoSistema else (False, pneusDaInspecao, divElementPneus)
 
-    def preencherCamposDaInspecao(divPneus, inspecoes):
+    def preencherCamposDaInspecao(self, divPneus, pneus, inspecoes):
         pneus = [label.text for label in divPneus]
         for pneu, element in zip(pneus, divPneus):
             selecionarPneu(element)
