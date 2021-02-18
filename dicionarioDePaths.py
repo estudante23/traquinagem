@@ -9,6 +9,7 @@ paths = {
 	"dataInput": '//*[@id="wrapper"]/hb-pneu-inspecao-form/div[2]/div/div/div/tabset/div/tab[1]/form/div/div[1]/div/div/div[2]/hb-datepicker/div/input',
 	"botaoAvancar": '//*[@id="wrapper"]/hb-pneu-inspecao-form/div[2]/div/div/div/tabset/div/tab[1]/form/div/div[2]/button[1]',
 	"placaVeiculo": '//*[@id="wrapper"]/hb-pneu-inspecao-form/div[2]/div/div/div/tabset/div/tab[2]/form/div/div[1]/div/div/div/hb-typeahead-veiculo/input',
+	##################################################################################################
 	"calibragemEncontrada": '//*[@id="wrapper"]/hb-pneu-inspecao-form/div[2]/div/div/div/tabset/div/tab[2]/form/div/div[2]/div[2]/form/div/div/div[2]/div/input',
 	"calibragemRealizada": '//*[@id="wrapper"]/hb-pneu-inspecao-form/div[2]/div/div/div/tabset/div/tab[2]/form/div/div[2]/div[2]/form/div/div/div[3]/div/input',
 	"alinhamento": '//*[@id="wrapper"]/hb-pneu-inspecao-form/div[2]/div/div/div/tabset/div/tab[2]/form/div/div[2]/div[2]/form/div/div/div[5]/div/select',

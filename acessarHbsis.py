@@ -43,15 +43,19 @@ class HBSIS():
 
     def registrarPlaca(self, placa):
         wait.until(EC.element_to_be_clickable((By.XPATH, paths['placaVeiculo']))).send_keys(placa)
-        wait.until(EC.element_to_be_clickable((By.XPATH, paths['placaSelecionada']))).click()
+        clicarEmBotao(paths['placaSelecionada'])
 
 
     def validarIgualdadeDosPneus(self, pneusDaInspecao):
         divElementPneus = driver.find_elements_by_class_name('label')
         pneusDoSistema = [label.text for label in divElementPneus]
         pneusDoSistema.sort(), pneusDaInspecao.sort()
-        print(pneusDoSistema, pneusDaInspecao)
-        return (True, pneusDoSistema) if pneusDaInspecao == pneusDoSistema else (False, pneusDaInspecao)
+        return (True, pneusDoSistema, divElementPneus) if pneusDaInspecao == pneusDoSistema else (False, pneusDaInspecao, divElementPneus)
+
+    def preencherCamposDaInspecao(divPneus, inspecoes):
+        pneus = [label.text for label in divPneus]
+        for pneu, element in zip(pneus, divPneus):
+            selecionarPneu(element)
 
 
 def clicarEmBotao(path):
@@ -65,4 +69,5 @@ def escreverData(data):
     wait.until(EC.element_to_be_clickable((By.XPATH, paths['dataInput']))).send_keys(data)
     wait.until(EC.element_to_be_clickable((By.XPATH, paths['dataInput']))).send_keys(Keys.TAB)
 
-
+def selecionarPneu(element):
+    element.click()
