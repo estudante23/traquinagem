@@ -16,6 +16,7 @@ paths = {
 	"laudo": '//*[@id="wrapper"]/hb-pneu-inspecao-form/div[2]/div/div/div/tabset/div/tab[2]/form/div/div[2]/div[2]/form/div/div/div[6]/div/select',
 	"adicionarInspecao": '//*[@id="wrapper"]/hb-pneu-inspecao-form/div[2]/div/div/div/tabset/div/tab[2]/form/div/div[2]/div[2]/form/div/div/div[7]/div/button[1]',
 	"placaSelecionada": '//*[@id="wrapper"]/hb-pneu-inspecao-form/div[2]/div/div/div/tabset/div/tab[2]/form/div/div[1]/div/div/div/hb-typeahead-veiculo/typeahead-container/table/tbody/tr[2]',
-	"eixos": '//*[@id="wrapper"]/hb-pneu-inspecao-form/div[2]/div/div/div/tabset/div/tab[2]/form/div/div[2]/div[1]/div/div/hb-chassi-drawer/div'
-
+	"eixos": '//*[@id="wrapper"]/hb-pneu-inspecao-form/div[2]/div/div/div/tabset/div/tab[2]/form/div/div[2]/div[1]/div/div/hb-chassi-drawer/div',
+	"sulcos": (lambda i: f'//*[@id="wrapper"]/hb-pneu-inspecao-form/div[2]/div/div/div/tabset/div/tab[2]/form/div/div[2]/div[2]/form/div/div/div[4]/div/input[{i}]'),
+	"botaoSalvar": '//*[@id="wrapper"]/hb-pneu-inspecao-form/div[2]/div/div/div/tabset/div/tab[2]/form/div/div[4]/button[2]'
 }

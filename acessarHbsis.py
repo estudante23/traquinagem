@@ -42,9 +42,9 @@ class HBSIS():
         clicarEmBotao(paths['botaoAvancar'])
 
     def registrarPlaca(self, placa):
+        self.placa = placa
         wait.until(EC.element_to_be_clickable((By.XPATH, paths['placaVeiculo']))).send_keys(placa)
         clicarEmBotao(paths['placaSelecionada'])
-
 
     def validarIgualdadeDosPneus(self, pneusDaInspecao):
         divElementPneus = driver.find_elements_by_class_name('label')
@@ -52,11 +52,43 @@ class HBSIS():
         pneusDoSistema.sort(), pneusDaInspecao.sort()
         return (True, pneusDoSistema, divElementPneus) if pneusDaInspecao == pneusDoSistema else (False, pneusDaInspecao, divElementPneus)
 
-    def preencherCamposDaInspecao(self, divPneus, pneus, inspecoes):
-        pneus = [label.text for label in divPneus]
-        for pneu, element in zip(pneus, divPneus):
-            selecionarPneu(element)
+    def preencherCamposDaInspecao(self, pneusElements, inspecao):
 
+        for element in pneusElements:
+            inspecaoDoPneu = inspecao.loc[element.text]
+            element.click()
+            preencherCamposDaCalibragem(inspecaoDoPneu['calibragem_encontrada'], inspecaoDoPneu['calibragem_ideal'])
+            preencherSulcos(inspecaoDoPneu['sulcos'])
+            selecionarAlinhamento(inspecaoDoPneu['alinhamento'])
+            selecionarLaudo(inspecaoDoPneu['laudo'])
+            try:
+                clicarEmBotao(paths['adicionarInspecao'])
+            except:
+                print('Só botaoSalvar')
+                # clicarEmBotao(paths['botaoSalvar'])
+
+
+def preencherCamposDaCalibragem(calibragem_encontrada, calibragem_realizada):
+    wait.until(EC.element_to_be_clickable((By.XPATH, paths['calibragemEncontrada']))).send_keys(str(calibragem_encontrada))
+    wait.until(EC.element_to_be_clickable((By.XPATH, paths['calibragemRealizada']))).send_keys(str(calibragem_realizada))
+
+def preencherSulcos(sulcos):
+    for i in range(1,5):
+        wait.until(EC.element_to_be_clickable((By.XPATH, paths['sulcos'](i)))).send_keys(str(sulcos[i-1]))        
+
+def selecionarAlinhamento(alinhamento):
+    options = driver.find_element_by_xpath(paths['alinhamento']).find_elements_by_tag_name('option')
+    for option in options:
+        if option.text == alinhamento:
+            option.click()
+            break
+
+def selecionarLaudo(laudo):
+    options = driver.find_element_by_xpath(paths['laudo']).find_elements_by_tag_name('option')
+    for option in options:
+        if option.text == laudo:
+            option.click()
+            break
 
 def clicarEmBotao(path):
     wait.until(EC.element_to_be_clickable((By.XPATH, path))).click()
@@ -68,6 +100,3 @@ def escreverConferenteEselecionar():
 def escreverData(data):
     wait.until(EC.element_to_be_clickable((By.XPATH, paths['dataInput']))).send_keys(data)
     wait.until(EC.element_to_be_clickable((By.XPATH, paths['dataInput']))).send_keys(Keys.TAB)
-
-def selecionarPneu(element):
-    element.click()

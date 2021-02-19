@@ -14,35 +14,35 @@ def checarSulco(sulco):
 	return sulcoAlternativo if novoSulco <= 1.6 else novoSulco
 	
 def subtrairPorValorAletorio(sulcos):
+	posicao = sulcos.pop(-1)
 	novoSulco = [acertarDecimais(checarSulco(sulco)) for sulco in sulcos]
-	return novoSulco
+	return novoSulco if posicao != 'Estepe' else sulcos
 
 def criarData(dataUltimaInspecao):
 	diaDaInspecao = dataUltimaInspecao.day
 	horarioAleatorio = [random.randint(7,11),random.randint(0,60),random.randint(0,60)]
-	return dataUltimaInspecao + timedelta(days=random.randint(32-diaDaInspecao,35), 
+	return dataUltimaInspecao + timedelta(days=random.randint(32-diaDaInspecao,34), 
 		hours=horarioAleatorio[0], minutes=horarioAleatorio[1], seconds=horarioAleatorio[2])
 
 def calibragemEncontrada(calibragemIdeal):
-	calibragemMinima = calibragemIdeal - 5
-	return random.randint(calibragemMinima, calibragemIdeal)
+	return random.randint(calibragemIdeal - 5, calibragemIdeal)
 
 def darLaudoDoPneu(sulcos):
 	valorMinimo = [(sulco <= 2.5) and (sulco > 0) for sulco in sulcos]
-	return 'Remover Pneu' if True in valorMinimo else 'Pneu Ok'
+	return 'Remover imediatamente' if True in valorMinimo else 'Pneu OK'
 
 def cirarNovaInspecaoApartirDaAntiga(inspecao):
-	novasInspecao = inspecao.copy()
-	dataInspecao = novasInspecao['data'][0]
-	placa = novasInspecao.pop('placa')[0]
+	novasInspecoes = inspecao.copy()
+	dataInspecao = novasInspecoes['data'][0]
+	placa = novasInspecoes.pop('placa')[0]
 
-	novasInspecao['sulcos'] = novasInspecao['sulcos'].transform(subtrairPorValorAletorio)
-	novasInspecao['data'] = criarData(dataInspecao)
-	novasInspecao['calibragem_encontrada'] = novasInspecao['calibragem_ideal'].transform(calibragemEncontrada)
-	novasInspecao['alinhamento'] = rodasConvergentes(placa)
-	novasInspecao['laudo'] = novasInspecao['sulcos'].transform(darLaudoDoPneu)
+	novasInspecoes['sulcos'] = novasInspecoes['sulcos'].transform(subtrairPorValorAletorio)
+	novasInspecoes['data'] = criarData(dataInspecao)
+	novasInspecoes['calibragem_encontrada'] = novasInspecoes['calibragem_ideal'].transform(calibragemEncontrada)
+	novasInspecoes['alinhamento'] = rodasConvergentes(placa)
+	novasInspecoes['laudo'] = novasInspecoes['sulcos'].transform(darLaudoDoPneu)
 	
-	return novasInspecao
+	return novasInspecoes
 
 
 def retornarNovasInspecoes(caminhoes, inspecoesDoMesAnterior):
@@ -52,6 +52,7 @@ def retornarNovasInspecoes(caminhoes, inspecoesDoMesAnterior):
 			inspecaoAnterior = inspecoesDoMesAnterior.groupby('placa').get_group(caminhao)
 		except:
 			continue
+		
 		
 		novasInspecoes[caminhao] = cirarNovaInspecaoApartirDaAntiga(inspecaoAnterior)
 	

@@ -1,11 +1,12 @@
 import pandas as pd
 from gerarInspecoes import criarNovasInspecoes
 from acessarHbsis import HBSIS
-dataframe = pd.read_csv(r'C:\Users\Frota\Downloads\pneu-inspecao.csv', sep=';', encoding='iso-8859-1')
+dataframe = pd.read_csv('pneu-inspecao.csv', sep=';', encoding='iso-8859-1')
 
 
-hbsis = HBSIS()
 novasInspecoes = criarNovasInspecoes(dataframe, 9)
+hbsis = HBSIS()
+
 
 for placa, inspecao in novasInspecoes.items():
 	data = inspecao.pop('data')[0]
@@ -14,7 +15,8 @@ for placa, inspecao in novasInspecoes.items():
 	validacao, pneus, elements = hbsis.validarIgualdadeDosPneus(list(inspecao.index))
 
 	if validacao == False:
-		hbsis.preencherCamposDaInspecao(elements, pneus, novasInspecoes)
+		hbsis.preencherCamposDaInspecao(elements, inspecao)
 		print('Função se houver diferença')
 	else:
+		hbsis.preencherCamposDaInspecao(elements, inspecao)
 		print('Continuar normal')
