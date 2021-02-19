@@ -1,6 +1,6 @@
 import pandas as pd
 
-with open(r'C:\Users\Frota\Documents\Projects\traquinagem\nomeDasColunas.txt') as fp:
+with open('arquivos\\nomeDasColunas.txt') as fp:
 	nomeDasColunas = fp.read().splitlines()
 
 colunasParaRemover = ['centro_de_custo', 'modelo_pneu', 'conferente', 'dispersao','observacao', 'calibragem_encontrada', 'calibragem_realizada', 'sulco_min', 'eixo']

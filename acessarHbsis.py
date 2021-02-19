@@ -4,67 +4,80 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from dicionarioDePaths import paths
+from arquivos.dicionarioDePaths import paths
+from modulos.retornarNovasInspecoes import criarNovaInspecaoApartirDaAntiga
 
 options = webdriver.ChromeOptions()
 options.add_argument('--start-maximized')
 driver = webdriver.Chrome(executable_path='C:\\SeleniumWebDriver\\chromedriver.exe', options=options)
 wait = WebDriverWait(driver, 20)
 
-
 class HBSIS():
     def __init__(self):
         driver.get('http://frotas.hbsis.com.br/login')
-
         driver.find_element_by_xpath(paths['loginUsuario']).send_keys(17846319736)
         driver.find_element_by_xpath(paths['loginSenha']).send_keys(123456)
-        driver.implicitly_wait(2)
         driver.find_element_by_xpath(paths['loginConfirm']).click()
 
-        self.acessarTabelaDeInspecao()
+        acessarTabelaDeInspecao()
 
-    def acessarTabelaDeInspecao(self):
-        while driver.current_url != 'http://frotas.hbsis.com.br/pneu-inspecao':
-            action = ActionChains(driver)
-                                
-            inspecaoDropElement = wait.until(EC.element_to_be_clickable((By.XPATH, paths['dropOutInspecao'])))
-            action.move_to_element(inspecaoDropElement)
-            inspecaoButton = wait.until(EC.presence_of_element_located((By.XPATH,  paths['inspecaoLiBotao'])))
-            action.click(inspecaoButton)
-            action.perform()
-            
-
-    def comecarInspecao(self, data):
+    def comecarInspecao(self, data, placa):
+        self.placa = placa
         driver.implicitly_wait(5)
         clicarEmBotao(paths['botaoNovo'])
         escreverConferenteEselecionar()
         escreverData(data)
         clicarEmBotao(paths['botaoAvancar'])
-
-    def registrarPlaca(self, placa):
-        self.placa = placa
-        wait.until(EC.element_to_be_clickable((By.XPATH, paths['placaVeiculo']))).send_keys(placa)
+        esperarElemento('placaVeiculo').send_keys(placa)
         clicarEmBotao(paths['placaSelecionada'])
 
-    def validarIgualdadeDosPneus(self, pneusDaInspecao):
-        divElementPneus = driver.find_elements_by_class_name('label')
-        pneusDoSistema = [label.text for label in divElementPneus]
-        pneusDoSistema.sort(), pneusDaInspecao.sort()
-        return (True, pneusDoSistema, divElementPneus) if pneusDaInspecao == pneusDoSistema else (False, pneusDaInspecao, divElementPneus)
-
-    def preencherCamposDaInspecao(self, pneusElements, inspecao):
-
-        for element in pneusElements:
-            inspecaoDoPneu = inspecao.loc[element.text]
+    def lancarInspecao(self, inspecao):
+        elements = driver.find_elements_by_class_name('label')
+        pneusSemInspecao = []
+        for element in elements:
             element.click()
-            preencherCamposDaCalibragem(inspecaoDoPneu['calibragem_encontrada'], inspecaoDoPneu['calibragem_ideal'])
-            preencherSulcos(inspecaoDoPneu['sulcos'])
-            selecionarAlinhamento(inspecaoDoPneu['alinhamento'])
-            selecionarLaudo(inspecaoDoPneu['laudo'])
-            clicarEmBotao(paths['adicionarInspecao'])
-            
-        # clicarEmBotao(paths['botaoSalvar'])
+            try:
+                preencherCamposDaInspecao(inspecao.loc[element.text]) 
+            except:
+                pneusSemInspecao.append(element)
 
+        return pneusSemInspecao
+
+    def lancarPneusSemInspecao(self, elements, inspecoesDf):
+        pneusSemInspecao = [element.text for element in elements]
+        for element in elements:
+            inspecaoDoPneu = inspecoesDf.loc[element.text]
+            novaInspecaoDoPneu = criarNovaInspecaoApartirDaAntiga(inspecaoDoPneu, self.placa)
+            print(novaInspecaoDoPneu                    )
+            element.click()
+            preencherCamposDaInspecao(novaInspecaoDoPneu)
+            
+
+
+def acessarTabelaDeInspecao():
+    driver.implicitly_wait(2)
+    while driver.current_url != 'http://frotas.hbsis.com.br/pneu-inspecao':
+        try:
+            action = ActionChains(driver)
+            dropOutInspecao = esperarElemento('dropOutInspecao')
+            dropOutInspecao.click()
+            action.move_to_element(dropOutInspecao)
+            action.click(esperarElemento('inspecaoLiBotao'))
+            action.perform()
+        except:
+            acessarTabelaDeInspecao()
+
+
+def preencherCamposDaInspecao(inspecaoDoPneu):
+    preencherCamposDaCalibragem(inspecaoDoPneu['calibragem_encontrada'], inspecaoDoPneu['calibragem_ideal'])
+    preencherSulcos(inspecaoDoPneu['sulcos'])
+    selecionarAlinhamento(inspecaoDoPneu['alinhamento'])
+    selecionarLaudo(inspecaoDoPneu['laudo'])
+    clicarEmBotao(paths['adicionarInspecao'])
+
+
+def esperarElemento(path):
+    return wait.until(EC.element_to_be_clickable((By.XPATH, paths[path])))
 
 def preencherCamposDaCalibragem(calibragem_encontrada, calibragem_realizada):
     wait.until(EC.element_to_be_clickable((By.XPATH, paths['calibragemEncontrada']))).send_keys(str(calibragem_encontrada))

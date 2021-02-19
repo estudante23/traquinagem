@@ -2,7 +2,7 @@ paths = {
 	"loginUsuario": "/html/body/hb-frotas/hb-login/div/div/form/div/div[1]/div/div/input",
 	"loginSenha": "/html/body/hb-frotas/hb-login/div/div/form/div/div[2]/div/div/input",
 	"loginConfirm": "/html/body/hb-frotas/hb-login/div/div/form/div/div[3]/div/button",
-	"dropOutInspecao": '//*[@id="wrapper"]/hb-top-bar/div/div/div[1]/div/ul/li[2]',
+	"dropOutInspecao": '/html/body/hb-frotas/hb-master-layout/div/hb-top-bar/div/div/div[1]/div/ul/li[2]	',
 	"inspecaoLiBotao": '//*[@id="wrapper"]/hb-top-bar/div/div/div[1]/div/ul/li[2]/a/ul/li[8]',
 	"botaoNovo": '//*[@id="wrapper"]/hb-pneu-inspecao-list/div/div/section/div[1]/button',
 	"conferenteInput": '//*[@id="wrapper"]/hb-pneu-inspecao-form/div[2]/div/div/div/tabset/div/tab[1]/form/div/div[1]/div/div/div[1]/hb-typeahead-borracheiro/input',

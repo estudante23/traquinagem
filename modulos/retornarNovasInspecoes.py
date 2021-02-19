@@ -9,7 +9,7 @@ caminhoesConvergentes = ['MPE4353','MRH9080','MQJ3903','MRB6679','MRB6686','MRB6
 
 def checarSulco(sulco):
 	if sulco == 0.0: return 0.0
-	novoSulco = sulco + random.triangular(.2, .35) 
+	novoSulco = sulco + random.triangular(.15, .25) 
 	sulcoAlternativo = sulco + random.triangular(.1, .4)
 	return sulcoAlternativo if novoSulco <= 1.6 else novoSulco
 	
@@ -20,21 +20,20 @@ def subtrairPorValorAletorio(sulcos):
 
 def criarData(dataUltimaInspecao):
 	diaDaInspecao = dataUltimaInspecao.day
-	horarioAleatorio = [random.randint(7,11),random.randint(0,60),random.randint(0,60)]
+	horarioAleatorio = [random.randint(7,11),random.randint(0,59),random.randint(0,59)]
 	return dataUltimaInspecao + timedelta(days=random.randint(32-diaDaInspecao,34), 
 		hours=horarioAleatorio[0], minutes=horarioAleatorio[1], seconds=horarioAleatorio[2])
 
 def calibragemEncontrada(calibragemIdeal):
-	return random.randint(calibragemIdeal - 5, calibragemIdeal)
+	return random.randint(calibragemIdeal - 4, calibragemIdeal)
 
 def darLaudoDoPneu(sulcos):
 	valorMinimo = [(sulco <= 2.5) and (sulco > 0) for sulco in sulcos]
 	return 'Remover imediatamente' if True in valorMinimo else 'Pneu OK'
 
-def cirarNovaInspecaoApartirDaAntiga(inspecao):
+def criarNovaInspecaoApartirDaAntiga(inspecao, placa):
 	novasInspecoes = inspecao.copy()
 	dataInspecao = novasInspecoes['data'][0]
-	placa = novasInspecoes.pop('placa')[0]
 
 	novasInspecoes['sulcos'] = novasInspecoes['sulcos'].transform(subtrairPorValorAletorio)
 	novasInspecoes['data'] = criarData(dataInspecao)
@@ -54,6 +53,6 @@ def retornarNovasInspecoes(caminhoes, inspecoesDoMesAnterior):
 			continue
 		
 		
-		novasInspecoes[caminhao] = cirarNovaInspecaoApartirDaAntiga(inspecaoAnterior)
+		novasInspecoes[caminhao] = criarNovaInspecaoApartirDaAntiga(inspecaoAnterior, caminhao)
 	
 	return novasInspecoes
