@@ -9,7 +9,8 @@ from modulos.retornarNovasInspecoes import criarNovaInspecaoApartirDaAntiga
 
 options = webdriver.ChromeOptions()
 options.add_argument('--start-maximized')
-driver = webdriver.Chrome(executable_path='C:\\SeleniumWebDriver\\chromedriver.exe', options=options)
+options.add_experimental_option('excludeSwitches', ['enable-logging'])
+driver = webdriver.Chrome(options=options)
 wait = WebDriverWait(driver, 20)
 
 class HBSIS():
@@ -47,8 +48,8 @@ class HBSIS():
         pneusSemInspecao = [element.text for element in elements]
         for element in elements:
             inspecaoDoPneu = inspecoesDf.loc[element.text]
-            novaInspecaoDoPneu = criarNovaInspecaoApartirDaAntiga(inspecaoDoPneu, self.placa)
-            print(novaInspecaoDoPneu                    )
+            novaInspecaoDoPneu = criarNovaInspecaoApartirDaAntiga(inspecaoDoPneu, self.placa).iloc[0]
+            print(novaInspecaoDoPneu)
             element.click()
             preencherCamposDaInspecao(novaInspecaoDoPneu)
             

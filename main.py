@@ -9,11 +9,10 @@ novasInspecoes = criarNovasInspecoes(inspecoesDf, 9)
 hbsis = HBSIS()
 
 
-for placa, inspecao in novasInspecoes.items():
-	if placa == 'QRL9J45':
-		data = inspecao.pop('data')[0].strftime('%d/%m/%Y %H:%M:%S')
-		hbsis.comecarInspecao(data, placa)
-		pneusSemInspecao = hbsis.lancarInspecao(inspecao)
+for placa, (data, inspecao) in novasInspecoes.items():
+	data = data.strftime('%d/%m/%Y %H:%M:%S')
+	hbsis.comecarInspecao(data, placa)
+	pneusSemInspecao = hbsis.lancarInspecao(inspecao)
 
-		if pneusSemInspecao != []:
-			hbsis.lancarPneusSemInspecao(pneusSemInspecao, inspecoesDf)
+	if pneusSemInspecao != []:
+		hbsis.lancarPneusSemInspecao(pneusSemInspecao, inspecoesDf)

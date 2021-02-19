@@ -1,6 +1,10 @@
 from collections import defaultdict
 from datetime import timedelta
 import random
+from calendar import Calendar
+
+calendario = Calendar().monthdayscalendar(2020, 9)
+domingos = [semana[-1] if semana[-1] != 0 else None for semana in calendario]
 
 rodasConvergentes = lambda placa: 'Convergente' if placa in caminhoesConvergentes else 'Divergente'
 acertarDecimais = lambda numero: float('{:.2f}'.format(numero))
@@ -21,8 +25,9 @@ def subtrairPorValorAletorio(sulcos):
 def criarData(dataUltimaInspecao):
 	diaDaInspecao = dataUltimaInspecao.day
 	horarioAleatorio = [random.randint(7,11),random.randint(0,59),random.randint(0,59)]
-	return dataUltimaInspecao + timedelta(days=random.randint(32-diaDaInspecao,34), 
+	novaData = dataUltimaInspecao + timedelta(days=random.randint(32-diaDaInspecao,34), 
 		hours=horarioAleatorio[0], minutes=horarioAleatorio[1], seconds=horarioAleatorio[2])
+	return novaData + timedelta(days=1) if novaData in domingos else novaData
 
 def calibragemEncontrada(calibragemIdeal):
 	return random.randint(calibragemIdeal - 4, calibragemIdeal)
@@ -33,10 +38,8 @@ def darLaudoDoPneu(sulcos):
 
 def criarNovaInspecaoApartirDaAntiga(inspecao, placa):
 	novasInspecoes = inspecao.copy()
-	dataInspecao = novasInspecoes['data'][0]
 
 	novasInspecoes['sulcos'] = novasInspecoes['sulcos'].transform(subtrairPorValorAletorio)
-	novasInspecoes['data'] = criarData(dataInspecao)
 	novasInspecoes['calibragem_encontrada'] = novasInspecoes['calibragem_ideal'].transform(calibragemEncontrada)
 	novasInspecoes['alinhamento'] = rodasConvergentes(placa)
 	novasInspecoes['laudo'] = novasInspecoes['sulcos'].transform(darLaudoDoPneu)
@@ -52,7 +55,7 @@ def retornarNovasInspecoes(caminhoes, inspecoesDoMesAnterior):
 		except:
 			continue
 		
-		
-		novasInspecoes[caminhao] = criarNovaInspecaoApartirDaAntiga(inspecaoAnterior, caminhao)
+		data = criarData(inspecaoAnterior.pop('data')[0])
+		novasInspecoes[caminhao] = (data.strftime('%d/%m/%Y %H:%M:%S'), criarNovaInspecaoApartirDaAntiga(inspecaoAnterior, caminhao))
 	
 	return novasInspecoes
