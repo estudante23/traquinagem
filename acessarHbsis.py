@@ -61,11 +61,9 @@ class HBSIS():
             preencherSulcos(inspecaoDoPneu['sulcos'])
             selecionarAlinhamento(inspecaoDoPneu['alinhamento'])
             selecionarLaudo(inspecaoDoPneu['laudo'])
-            try:
-                clicarEmBotao(paths['adicionarInspecao'])
-            except:
-                print('Só botaoSalvar')
-                # clicarEmBotao(paths['botaoSalvar'])
+            clicarEmBotao(paths['adicionarInspecao'])
+            
+        # clicarEmBotao(paths['botaoSalvar'])
 
 
 def preencherCamposDaCalibragem(calibragem_encontrada, calibragem_realizada):
